@@ -22,12 +22,12 @@ workflows:
           flutter precache ios
       - name: Regenerate iOS files
         script: |
-          rm -rf ios/Flutter/flutter_export_environment.sh ios/Flutter/Generated.xcconfig ios/Flutter/Flutter.podspec
-          flutter create . --platforms ios --overwrite
-          ls -la ios/Flutter/
+          rm -f ios/Flutter/flutter_export_environment.sh ios/Flutter/Generated.xcconfig ios/Flutter/Flutter.podspec
+          flutter create . --platforms ios
+          flutter create --platforms ios --template app --overwrite
       - name: Build iOS app (unsigned for AltStore)
         script: |
           flutter build ios --no-codesign
           flutter build ipa --release --no-codesign
     artifacts:
-      - build/ios/iphoneos/*.ipa
+      - build/ios/archive/Runner.xcarchive
