@@ -7,7 +7,8 @@ workflows:
       flutter: stable
       vars:
         APPLE_ID: "+86 15916504754"  # 替换为你的 Apple ID
-        # APPLE_APP_SPECIFIC_PASSWORD: "xxxx-xxxx-xxxx-xxxx"  # App 专用密码（如果开启了两步验证）
+        APPLE_APP_SPECIFIC_PASSWORD: "svrx-uyap-xeoc-fcbh"  # App 专用密码（如开启了两步验证）
+        APPLE_TEAM_ID: ""  # 你的 Team ID（可选，登录后会自动获取）
     triggering:
       events:
         - push
@@ -15,14 +16,23 @@ workflows:
     cache:
       cache_paths:
         - $HOME/.pub-cache
+        - $HOME/Library/MobileDevice/Provisioning Profiles
     scripts:
       - name: Get Flutter packages
         script: |
           flutter pub get
-      - name: Set up code signing
+      - name: Set up code signing with Apple ID
         script: |
+          # 安装依赖
+          pip3 install codemagic-cli-tools >/dev/null 2>&1 || true
+
+          # 登录 Apple ID
+          if [ -n "$APPLE_ID" ] && [ -n "$APPLE_APP_SPECIFIC_PASSWORD" ]; then
+            echo "Logging in to Apple Developer account..."
+            xcrun altool --store-password-in-keychain -u "$APPLE_ID" -p "$APPLE_APP_SPECIFIC_PASSWORD" -s ios 2>/dev/null || true
+          fi
+
           # 创建 ExportOptions.plist
-          mkdir -p ios/Runner
           cat > ios/Runner/ExportOptions.plist << 'EOF'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -39,11 +49,7 @@ workflows:
           </dict>
           </plist>
           EOF
-
-          # 使用 fastlane match 或手动签名
-          echo "Setting up code signing..."
-          xcode-select --install 2>/dev/null || true
-      - name: Build iOS app with code signing
+      - name: Build iOS app
         script: |
           flutter build ipa \
             --release \
