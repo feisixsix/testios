@@ -16,38 +16,20 @@ workflows:
       - name: Get Flutter packages
         script: |
           flutter pub get
-      - name: Build iOS app using xcodebuild
+      - name: Build iOS app (unsigned for AltStore)
         script: |
-          cd ios
+          # 构建 iOS Release 版本
+          flutter build ios --release --no-codesign
 
-          # 列出 project 中的 scheme
-          echo "Schemes in project:"
-          xcodebuild -project Runner.xcodeproj -list
+          # 复制构建产物到 ipa 目录
+          mkdir -p build/ios/iphoneos/Payload
+          cp -r build/ios/ios/Runner.app build/ios/iphoneos/Payload/
 
-          # 构建 app（无签名）
-          xcodebuild \
-            -project Runner.xcodeproj \
-            -scheme Runner \
-            -configuration Release \
-            -archivePath build/Runner.xcarchive \
-            CODE_SIGN_IDENTITY="-" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO \
-            -skipPackagePluginValidation \
-            -skipMacroValidation \
-            clean build
+          # 创建 .ipa
+          cd build/ios/iphoneos
+          zip -r ../iphoneos.ipa Payload
+          cd ../..
 
-          # 导出 .ipa
-          xcodebuild \
-            -exportArchive \
-            -archivePath build/Runner.xcarchive \
-            -exportOptionsPlist Runner/ExportOptions.plist \
-            -exportPath build/ipa \
-            CODE_SIGN_IDENTITY="-" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
-
-          cd ..
-          ls -la build/ipa/
+          ls -la build/ios/
     artifacts:
-      - build/ipa/*.ipa
+      - build/ios/*.ipa
