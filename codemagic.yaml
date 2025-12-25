@@ -5,9 +5,6 @@ workflows:
     max_build_duration: 120
     environment:
       flutter: stable
-      vars:
-        APPLE_ID: "+86 15916504754"  # 替换为你的 Apple ID
-        APPLE_APP_SPECIFIC_PASSWORD: "svrx-uyap-xeoc-fcbh"  # App 专用密码（如开启了两步验证）
     triggering:
       events:
         - push
@@ -15,43 +12,12 @@ workflows:
     cache:
       cache_paths:
         - $HOME/.pub-cache
-        - $HOME/Library/MobileDevice/Provisioning Profiles
     scripts:
       - name: Get Flutter packages
         script: |
           flutter pub get
-      - name: Set up code signing with Apple ID
+      - name: Build iOS app (no codesign for AltStore)
         script: |
-          # 安装依赖
-          pip3 install codemagic-cli-tools >/dev/null 2>&1 || true
-
-          # 登录 Apple ID
-          if [ -n "$APPLE_ID" ] && [ -n "$APPLE_APP_SPECIFIC_PASSWORD" ]; then
-            echo "Logging in to Apple Developer account..."
-            xcrun altool --store-password-in-keychain -u "$APPLE_ID" -p "$APPLE_APP_SPECIFIC_PASSWORD" -s ios 2>/dev/null || true
-          fi
-
-          # 创建 ExportOptions.plist
-          cat > ios/Runner/ExportOptions.plist << 'EOF'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key>
-            <string>development</string>
-            <key>teamID</key>
-            <string></string>
-            <key>signingStyle</key>
-            <string>automatic</string>
-            <key>destination</key>
-            <string>generic/platform=iOS</string>
-          </dict>
-          </plist>
-          EOF
-      - name: Build iOS app
-        script: |
-          flutter build ipa \
-            --release \
-            --export-options-plist=ios/Runner/ExportOptions.plist
+          flutter build ipa --release --no-codesign
     artifacts:
       - build/ios/iphoneos/*.ipa
