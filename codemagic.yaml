@@ -8,7 +8,6 @@ workflows:
       vars:
         APPLE_ID: "+86 15916504754"  # 替换为你的 Apple ID
         APPLE_APP_SPECIFIC_PASSWORD: "svrx-uyap-xeoc-fcbh"  # App 专用密码（如开启了两步验证）
-        APPLE_TEAM_ID: ""  # 你的 Team ID（可选，登录后会自动获取）
     triggering:
       events:
         - push
