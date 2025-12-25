@@ -19,7 +19,7 @@ Flutter/App.framework
 Flutter/Flutter.framework
 Flutter/Flutter.podspec
 # Flutter/Generated.xcconfig  # 需要提交到版本控制
-Flutter/ephemeral/
+# Flutter/ephemeral/  # 需要提交到版本控制
 Flutter/app.flx
 Flutter/app.zip
 Flutter/flutter_assets/
