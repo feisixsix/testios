@@ -29,7 +29,7 @@ workflows:
           # 生成 xcconfig 文件
           FLUTTER_ROOT=$(dirname $(dirname $(which flutter)))
           cat > ios/Flutter/Generated.xcconfig << EOF
-// This is a generated file; do not edit or check into version control.
+# This is a generated file; do not edit or check into version control.
 FLUTTER_ROOT=$FLUTTER_ROOT
 FLUTTER_APPLICATION_PATH=\$SRCROOT/..
 COCOAPODS_PARALLEL_CODE_SIGN=true
