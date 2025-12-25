@@ -20,13 +20,21 @@ workflows:
         script: |
           cd ios
 
+          # 列出可用的 scheme
+          echo "Available schemes:"
+          xcrun xcodebuild -workspace Runner.xcworkspace -list
+
+          # 获取 scheme 名称
+          SCHEME=$(xcrun xcodebuild -workspace Runner.xcworkspace -list | grep "Runner" | head -1 | tr -d ' ')
+          echo "Using scheme: $SCHEME"
+
           # 清理旧的构建
-          xcodebuild clean -workspace Runner.xcworkspace -scheme Runner -configuration Release 2>/dev/null || true
+          xcodebuild clean -workspace Runner.xcworkspace -scheme "$SCHEME" -configuration Release 2>/dev/null || true
 
           # 构建 .ipa（无签名）
           xcodebuild archive \
             -workspace Runner.xcworkspace \
-            -scheme Runner \
+            -scheme "$SCHEME" \
             -configuration Release \
             -archivePath build/Runner.xcarchive \
             CODE_SIGN_IDENTITY="-" \
