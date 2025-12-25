@@ -5,6 +5,9 @@ workflows:
     max_build_duration: 120
     environment:
       flutter: stable
+      vars:
+        APPLE_ID: "+86 15916504754"  # 替换为你的 Apple ID
+        # APPLE_APP_SPECIFIC_PASSWORD: "xxxx-xxxx-xxxx-xxxx"  # App 专用密码（如果开启了两步验证）
     triggering:
       events:
         - push
@@ -16,8 +19,34 @@ workflows:
       - name: Get Flutter packages
         script: |
           flutter pub get
-      - name: Build iOS app
+      - name: Set up code signing
         script: |
-          flutter build ipa --release --no-codesign
+          # 创建 ExportOptions.plist
+          mkdir -p ios/Runner
+          cat > ios/Runner/ExportOptions.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>development</string>
+            <key>teamID</key>
+            <string></string>
+            <key>signingStyle</key>
+            <string>automatic</string>
+            <key>destination</key>
+            <string>generic/platform=iOS</string>
+          </dict>
+          </plist>
+          EOF
+
+          # 使用 fastlane match 或手动签名
+          echo "Setting up code signing..."
+          xcode-select --install 2>/dev/null || true
+      - name: Build iOS app with code signing
+        script: |
+          flutter build ipa \
+            --release \
+            --export-options-plist=ios/Runner/ExportOptions.plist
     artifacts:
       - build/ios/iphoneos/*.ipa
