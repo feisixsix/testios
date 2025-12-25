@@ -16,35 +16,36 @@ workflows:
       - name: Get Flutter packages
         script: |
           flutter pub get
-      - name: Build iOS app (no codesign for AltStore)
+      - name: Build iOS app using xcodebuild
         script: |
-          # 创建禁用签名的 ExportOptions.plist
-          mkdir -p ios/Runner
-          cat > ios/Runner/ExportOptions.plist << 'EOF'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key>
-            <string>ad-hoc</string>
-            <key>skipInstall</key>
-            <true/>
-            <key>signingStyle</key>
-            <string>none</string>
-            <key>destination</key>
-            <string>generic/platform=iOS</string>
-          </dict>
-          </plist>
-          EOF
+          cd ios
 
-          # 设置环境变量禁用签名
-          export CODE_SIGN_IDENTITY="-"
-          export CODE_SIGNING_REQUIRED=NO
-          export CODE_SIGNING_ALLOWED=NO
+          # 清理旧的构建
+          xcodebuild clean -workspace Runner.xcworkspace -scheme Runner -configuration Release 2>/dev/null || true
 
-          # 构建
-          flutter build ipa --release \
-            --export-options-plist=ios/Runner/ExportOptions.plist \
-            --no-codesign
+          # 构建 .ipa（无签名）
+          xcodebuild archive \
+            -workspace Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -archivePath build/Runner.xcarchive \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            -skipPackagePluginValidation \
+            -skipMacroValidation
+
+          # 导出 .ipa
+          xcodebuild -exportArchive \
+            -archivePath build/Runner.xcarchive \
+            -exportOptionsPlist Runner/ExportOptions.plist \
+            -exportPath ../build/ios/iphoneos \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+          cd ..
+
+          ls -la build/ios/iphoneos/
     artifacts:
       - build/ios/iphoneos/*.ipa
