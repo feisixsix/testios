@@ -20,13 +20,14 @@ workflows:
           flutter clean
           flutter pub get
           flutter precache ios
-      - name: Regenerate iOS files
+      - name: Generate iOS files
         script: |
-          rm -f ios/Flutter/flutter_export_environment.sh ios/Flutter/Generated.xcconfig ios/Flutter/Flutter.podspec
-          flutter build ios --no-codesign
+          flutter create .
       - name: Build iOS app (unsigned for AltStore)
         script: |
           flutter build ios --no-codesign
+      - name: Build IPA
+        script: |
           flutter build ipa --release --no-codesign
     artifacts:
       - build/ios/archive/Runner.xcarchive
