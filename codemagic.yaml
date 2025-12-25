@@ -18,9 +18,10 @@ workflows:
       - name: Get Flutter packages
         script: |
           flutter pub get
-      - name: Prepare iOS
+      - name: Prepare iOS platform
         script: |
           flutter precache ios
+          flutter create . --platforms ios
       - name: Build iOS app (unsigned for AltStore)
         script: |
           flutter build ipa --release --no-codesign
