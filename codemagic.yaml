@@ -20,7 +20,11 @@ workflows:
           flutter clean
           flutter pub get
           flutter precache ios
-          rm -rf ios/Pods ios/Podfile.lock
+      - name: Regenerate iOS files
+        script: |
+          rm -rf ios/Flutter/flutter_export_environment.sh ios/Flutter/Generated.xcconfig ios/Flutter/Flutter.podspec
+          flutter create . --platforms ios --overwrite
+          ls -la ios/Flutter/
       - name: Build iOS app (unsigned for AltStore)
         script: |
           flutter build ios --no-codesign
