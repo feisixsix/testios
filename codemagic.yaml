@@ -15,17 +15,15 @@ workflows:
         - $HOME/Library/Caches/flutter
         - $HOME/Library/Developer/Xcode/DerivedData
     scripts:
-      - name: Get Flutter packages
+      - name: Clean and prepare
         script: |
+          flutter clean
           flutter pub get
-      - name: Prepare iOS platform
-        script: |
           flutter precache ios
-          flutter create . --platforms ios
-          ls -la ios/Flutter/
+          rm -rf ios/Pods ios/Podfile.lock
       - name: Build iOS app (unsigned for AltStore)
         script: |
-          flutter build ios --no-codesign --verbose
+          flutter build ios --no-codesign
           flutter build ipa --release --no-codesign
     artifacts:
       - build/ios/iphoneos/*.ipa
