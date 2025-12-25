@@ -18,6 +18,33 @@ workflows:
           flutter pub get
       - name: Build iOS app (no codesign for AltStore)
         script: |
-          flutter build ipa --release --no-codesign
+          # 创建禁用签名的 ExportOptions.plist
+          mkdir -p ios/Runner
+          cat > ios/Runner/ExportOptions.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>ad-hoc</string>
+            <key>skipInstall</key>
+            <true/>
+            <key>signingStyle</key>
+            <string>none</string>
+            <key>destination</key>
+            <string>generic/platform=iOS</string>
+          </dict>
+          </plist>
+          EOF
+
+          # 设置环境变量禁用签名
+          export CODE_SIGN_IDENTITY="-"
+          export CODE_SIGNING_REQUIRED=NO
+          export CODE_SIGNING_ALLOWED=NO
+
+          # 构建
+          flutter build ipa --release \
+            --export-options-plist=ios/Runner/ExportOptions.plist \
+            --no-codesign
     artifacts:
       - build/ios/iphoneos/*.ipa
