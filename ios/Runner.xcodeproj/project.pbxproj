@@ -7,12 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		33CC111A2044C6FA0000003A /* Runner-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 33CC11192044C6FA0000003A /* Runner-Bridging-Header.h */; };
 		33CC111C2044C6FA0000003A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC111B2044C6FA0000003A /* AppDelegate.swift */; };
 		33CC111E2044C6FA0000003A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33CC111D2044C6FA0000003A /* Assets.xcassets */; };
 		33CC11202044C6FA0000003A /* LaunchScreen in Resources */ = {isa = PBXBuildFile; fileRef = 33CC111F2044C6FA0000003A /* LaunchScreen */; };
 		33CC11222044C6FA0000003A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33CC11212044C6FA0000003A /* Main.storyboard */; };
-		33CC11242044C6FA0000003A /* Generated.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 33CC11232044C6FA0000003A /* Generated.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -88,16 +86,6 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		33CC11102044C6FA0000003A /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				33CC111A2044C6FA0000003A /* Runner-Bridging-Header.h in Headers */,
-			);
-			runGroupForBuildOrdering = "";
-		};
-/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		33CC11122044C6FA0000003A /* Runner */ = {
@@ -105,8 +93,6 @@
 			buildConfigurationList = 33CC112B2044C6FA0000003A /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
 				33CC110E2044C6FA0000003A /* Sources */,
-				33CC110F2044C6FA0000003A /* Frameworks */,
-				33CC11102044C6FA0000003A /* Headers */,
 				33CC11142044C6FA0000003A /* Frameworks */,
 				33CC11152044C6FA0000003A /* Embed Frameworks */,
 				33CC111E2044C6FA0000003A /* Resources */,
@@ -183,7 +169,6 @@
 		33CC111F2044C6FA0000003A /* LaunchScreen */ = {
 			isa = PBXVariantGroup;
 			children = (
-				33CC111D2044C6FA0000003A /* Assets.xcassets */,
 			);
 			name = LaunchScreen;
 			sourceTree = "<group>";
