@@ -23,8 +23,7 @@ workflows:
       - name: Regenerate iOS files
         script: |
           rm -f ios/Flutter/flutter_export_environment.sh ios/Flutter/Generated.xcconfig ios/Flutter/Flutter.podspec
-          flutter create . --platforms ios
-          flutter create --platforms ios --template app --overwrite
+          flutter build ios --no-codesign
       - name: Build iOS app (unsigned for AltStore)
         script: |
           flutter build ios --no-codesign
