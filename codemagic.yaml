@@ -19,17 +19,9 @@ workflows:
       - name: Build iOS app (unsigned for AltStore)
         script: |
           # 构建 iOS Release 版本
-          flutter build ios --release --no-codesign
+          flutter build ipa --release --no-codesign
 
-          # 复制构建产物到 ipa 目录
-          mkdir -p build/ios/iphoneos/Payload
-          cp -r build/ios/ios/Runner.app build/ios/iphoneos/Payload/
-
-          # 创建 .ipa
-          cd build/ios/iphoneos
-          zip -r ../iphoneos.ipa Payload
-          cd ../..
-
-          ls -la build/ios/
+          # 列出构建产物
+          find build -name "*.ipa" -type f
     artifacts:
-      - build/ios/*.ipa
+      - build/ios/iphoneos/*.ipa
