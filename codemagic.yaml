@@ -18,10 +18,13 @@ workflows:
           flutter pub get
       - name: Build iOS app (unsigned for AltStore)
         script: |
-          # 构建 iOS Release 版本
-          flutter build ipa --release --no-codesign
+          # 使用 flutter build ipa 命令
+          flutter build ipa \
+            --release \
+            --no-codesign \
+            --verbose
 
-          # 列出构建产物
-          find build -name "*.ipa" -type f
+          # 查找生成的 .ipa 文件
+          find . -name "*.ipa" -type f -exec ls -la {} \;
     artifacts:
       - build/ios/iphoneos/*.ipa
