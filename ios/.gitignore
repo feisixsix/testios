@@ -18,7 +18,7 @@ xcuserdata
 Flutter/App.framework
 Flutter/Flutter.framework
 Flutter/Flutter.podspec
-Flutter/Generated.xcconfig
+# Flutter/Generated.xcconfig  # 需要提交到版本控制
 Flutter/ephemeral/
 Flutter/app.flx
 Flutter/app.zip
