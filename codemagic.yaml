@@ -20,40 +20,34 @@ workflows:
         script: |
           cd ios
 
-          # 列出可用的 scheme
-          echo "Available schemes:"
-          xcrun xcodebuild -workspace Runner.xcworkspace -list
+          # 列出 project 中的 scheme
+          echo "Schemes in project:"
+          xcodebuild -project Runner.xcodeproj -list
 
-          # 获取 scheme 名称
-          SCHEME=$(xcrun xcodebuild -workspace Runner.xcworkspace -list | grep "Runner" | head -1 | tr -d ' ')
-          echo "Using scheme: $SCHEME"
-
-          # 清理旧的构建
-          xcodebuild clean -workspace Runner.xcworkspace -scheme "$SCHEME" -configuration Release 2>/dev/null || true
-
-          # 构建 .ipa（无签名）
-          xcodebuild archive \
-            -workspace Runner.xcworkspace \
-            -scheme "$SCHEME" \
+          # 构建 app（无签名）
+          xcodebuild \
+            -project Runner.xcodeproj \
+            -scheme Runner \
             -configuration Release \
             -archivePath build/Runner.xcarchive \
             CODE_SIGN_IDENTITY="-" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             -skipPackagePluginValidation \
-            -skipMacroValidation
+            -skipMacroValidation \
+            clean build
 
           # 导出 .ipa
-          xcodebuild -exportArchive \
+          xcodebuild \
+            -exportArchive \
             -archivePath build/Runner.xcarchive \
             -exportOptionsPlist Runner/ExportOptions.plist \
-            -exportPath ../build/ios/iphoneos \
+            -exportPath build/ipa \
             CODE_SIGN_IDENTITY="-" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
 
           cd ..
-
-          ls -la build/ios/iphoneos/
+          ls -la build/ipa/
     artifacts:
-      - build/ios/iphoneos/*.ipa
+      - build/ipa/*.ipa
