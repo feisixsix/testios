@@ -1,0 +1,21 @@
+PODS:
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git
+
+FEEDBACK:
+  - email: ""
+    name: ""
+    url: ""
+
+PLATFORMS:
+  ios: '14.0'
+
+TARGETS:
+  Runner:
+    settings:
+      PRODUCT_NAME: Runner
