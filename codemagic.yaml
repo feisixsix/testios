@@ -22,8 +22,10 @@ workflows:
         script: |
           flutter precache ios
           flutter create . --platforms ios
+          ls -la ios/Flutter/
       - name: Build iOS app (unsigned for AltStore)
         script: |
+          flutter build ios --no-codesign --verbose
           flutter build ipa --release --no-codesign
     artifacts:
       - build/ios/iphoneos/*.ipa
